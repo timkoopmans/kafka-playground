@@ -3,7 +3,7 @@ package org.example;
 import org.apache.kafka.clients.consumer.*;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class ConsumerExample {
@@ -25,20 +25,17 @@ public class ConsumerExample {
 
         // Add additional required properties for this consumer app
         final Consumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList(topic));
 
-        try {
+        try (consumer) {
+            consumer.subscribe(List.of(topic));
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, String> record : records) {
                     String key = record.key();
                     String value = record.value();
-                    System.out.println(
-                            String.format("Consumed event from topic %s: key = %-10s value = %s", topic, key, value));
+                    System.out.printf("Consumed event from topic %s: key = %-10s value = %s%n", topic, key, value);
                 }
             }
-        } finally {
-            consumer.close();
         }
     }
 }
