@@ -12,6 +12,7 @@ target/
 *.iws
 *.iml
 *.ipr
+kafka.config
 
 ### Eclipse ###
 .apt_generated
